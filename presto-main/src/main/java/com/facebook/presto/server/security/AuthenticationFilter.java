@@ -17,9 +17,11 @@ import com.facebook.airlift.http.server.AuthenticationException;
 import com.facebook.airlift.http.server.Authenticator;
 import com.facebook.presto.ClientRequestFilterManager;
 import com.facebook.presto.spi.ClientRequestFilter;
+import com.facebook.presto.spi.PrestoException;
 import com.google.common.base.Joiner;
 import com.google.common.base.Strings;
 import com.google.common.collect.ImmutableList;
+import com.google.common.collect.ImmutableSet;
 import com.google.common.net.HttpHeaders;
 
 import javax.inject.Inject;
@@ -48,6 +50,7 @@ import java.util.Optional;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 
+import static com.facebook.presto.spi.StandardErrorCode.HEADER_MODIFICATION_ATTEMPT;
 import static com.google.common.io.ByteStreams.copy;
 import static com.google.common.io.ByteStreams.nullOutputStream;
 import static com.google.common.net.HttpHeaders.WWW_AUTHENTICATE;
@@ -62,6 +65,7 @@ public class AuthenticationFilter
     private final List<Authenticator> authenticators;
     private final boolean allowForwardedHttps;
     private final ClientRequestFilterManager clientRequestFilterManager;
+    private final List<String> headersBlockList = ImmutableList.of("X-Presto-Transaction-Id", "X-Presto-Started-Transaction-Id", "X-Presto-Clear-Transaction-Id", "X-Presto-Trace-Token");
 
     @Inject
     public AuthenticationFilter(List<Authenticator> authenticators, SecurityConfig securityConfig, ClientRequestFilterManager clientRequestFilterManager)
@@ -109,6 +113,7 @@ public class AuthenticationFilter
             // authentication succeeded
             CustomHttpServletRequestWrapper wrappedRequest = new CustomHttpServletRequestWrapper(request);
             Map<String, String> extraHeadersMap = new HashMap<>();
+            Set<String> globallyAddedHeaders = new HashSet<>();
 
             for (ClientRequestFilter requestFilter : clientRequestFilterManager.getClientRequestFilters()) {
                 boolean headersPresent = requestFilter.getHeaderNames().stream()
@@ -119,8 +124,16 @@ public class AuthenticationFilter
 
                     extraHeaderValueMap.ifPresent(map -> {
                         for (Map.Entry<String, String> extraHeaderEntry : map.entrySet()) {
-                            if (request.getHeader(extraHeaderEntry.getKey()) == null) {
-                                extraHeadersMap.putIfAbsent(extraHeaderEntry.getKey(), extraHeaderEntry.getValue());
+                            String headerKey = extraHeaderEntry.getKey();
+                            if (headersBlockList.contains(headerKey)) {
+                                throw new PrestoException(HEADER_MODIFICATION_ATTEMPT, "Modification attempt detected: The header " + headerKey + " is present in the blocked headers list.");
+                            }
+                            if (globallyAddedHeaders.contains(headerKey)) {
+                                throw new RuntimeException("Header conflict detected: " + headerKey + " already added by another filter.");
+                            }
+                            if (request.getHeader(headerKey) == null && requestFilter.getHeaderNames().contains(headerKey)) {
+                                extraHeadersMap.putIfAbsent(headerKey, extraHeaderEntry.getValue());
+                                globallyAddedHeaders.add(headerKey);
                             }
                         }
                     });
@@ -200,12 +213,11 @@ public class AuthenticationFilter
     public static class CustomHttpServletRequestWrapper
             extends HttpServletRequestWrapper
     {
-        private final Map<String, String> customHeaders;
+        private final Map<String, String> customHeaders = new ConcurrentHashMap<>();
 
         public CustomHttpServletRequestWrapper(HttpServletRequest request)
         {
             super(request);
-            this.customHeaders = new ConcurrentHashMap<>();
         }
 
         @Override
@@ -221,12 +233,13 @@ public class AuthenticationFilter
         @Override
         public Enumeration<String> getHeaderNames()
         {
-            Set<String> headerNames = new HashSet<>(customHeaders.keySet());
+            ImmutableSet.Builder<String> headerNamesBuilder = ImmutableSet.builder();
+            headerNamesBuilder.addAll(customHeaders.keySet());
             Enumeration<String> originalHeaderNames = super.getHeaderNames();
             while (originalHeaderNames.hasMoreElements()) {
-                headerNames.add(originalHeaderNames.nextElement());
+                headerNamesBuilder.add(originalHeaderNames.nextElement());
             }
-            return Collections.enumeration(headerNames);
+            return Collections.enumeration(headerNamesBuilder.build());
         }
 
         @Override
