@@ -143,7 +143,7 @@ public interface Plugin
         return emptyList();
     }
 
-    default Iterable<RequestModifier> getRequestModifiers()
+    default Iterable<ClientRequestFilter> getClientRequestFilters()
     {
         return emptyList();
     }
