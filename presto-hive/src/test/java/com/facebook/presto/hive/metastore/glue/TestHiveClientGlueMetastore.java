@@ -95,7 +95,6 @@ import static org.apache.hadoop.hive.common.FileUtils.makePartName;
 import static org.apache.hadoop.hive.metastore.TableType.EXTERNAL_TABLE;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.testng.Assert.assertEquals;
-import static org.testng.Assert.assertFalse;
 import static org.testng.Assert.assertTrue;
 
 public class TestHiveClientGlueMetastore
@@ -357,7 +356,7 @@ public class TestHiveClientGlueMetastore
                     tableName.getTableName(),
                     predicates);
 
-            assertFalse(partitionNames.isEmpty());
+            assertTrue(!partitionNames.isEmpty());
             assertEquals(partitionNames, ImmutableList.of("key=value2/int_partition=2"));
 
             // KEY is a reserved keyword in the grammar of the SQL parser used internally by Glue API
@@ -371,7 +370,7 @@ public class TestHiveClientGlueMetastore
                     tableName.getSchemaName(),
                     tableName.getTableName(),
                     predicates);
-            assertFalse(partitionNames.isEmpty());
+            assertTrue(!partitionNames.isEmpty());
             assertEquals(partitionNames, ImmutableList.of("key=value1/int_partition=1", "key=value2/int_partition=2"));
         }
         finally {

@@ -48,7 +48,7 @@ import static org.apache.iceberg.CatalogProperties.WAREHOUSE_LOCATION;
  */
 public class IcebergNativeCatalogFactory
 {
-    protected final Cache<String, Catalog> catalogCache;
+    private final Cache<String, Catalog> catalogCache;
     private final String catalogName;
     protected final CatalogType catalogType;
     private final String catalogWarehouse;
@@ -99,7 +99,7 @@ public class IcebergNativeCatalogFactory
         throw new PrestoException(NOT_SUPPORTED, "Iceberg catalog of type " + catalogType + " does not support namespace operations");
     }
 
-    protected String getCacheKey(ConnectorSession session)
+    private String getCacheKey(ConnectorSession session)
     {
         StringBuilder sb = new StringBuilder();
         sb.append(catalogName);
@@ -112,7 +112,7 @@ public class IcebergNativeCatalogFactory
         return Optional.empty();
     }
 
-    protected Map<String, String> getProperties(ConnectorSession session)
+    private Map<String, String> getProperties(ConnectorSession session)
     {
         Map<String, String> properties = new HashMap<>();
         if (icebergConfig.getManifestCachingEnabled()) {
@@ -134,7 +134,7 @@ public class IcebergNativeCatalogFactory
         return ImmutableMap.of();
     }
 
-    protected Configuration getHadoopConfiguration()
+    private Configuration getHadoopConfiguration()
     {
         Configuration configuration = new Configuration(false);
 

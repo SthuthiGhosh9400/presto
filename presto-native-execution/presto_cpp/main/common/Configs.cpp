@@ -192,6 +192,7 @@ SystemConfig::SystemConfig() {
           STR_PROP(kSharedArbitratorReservedCapacity, "4GB"),
           STR_PROP(kSharedArbitratorMemoryPoolInitialCapacity, "128MB"),
           STR_PROP(kSharedArbitratorMemoryPoolReservedCapacity, "64MB"),
+          STR_PROP(kSharedArbitratorMemoryPoolTransferCapacity, "32MB"),
           STR_PROP(kSharedArbitratorMemoryReclaimMaxWaitTime, "5m"),
           STR_PROP(kSharedArbitratorGlobalArbitrationEnabled, "false"),
           NUM_PROP(kLargestSizeClassPages, 256),
@@ -550,6 +551,15 @@ std::string SystemConfig::sharedArbitratorMemoryPoolReservedCapacity() const {
              kSharedArbitratorMemoryPoolReservedCapacity)
       .value_or(
           std::string(kSharedArbitratorMemoryPoolReservedCapacityDefault));
+}
+
+std::string SystemConfig::sharedArbitratorMemoryPoolTransferCapacity() const {
+  static constexpr std::string_view
+      kSharedArbitratorMemoryPoolTransferCapacityDefault = "32MB";
+  return optionalProperty<std::string>(
+             kSharedArbitratorMemoryPoolTransferCapacity)
+      .value_or(
+          std::string(kSharedArbitratorMemoryPoolTransferCapacityDefault));
 }
 
 std::string SystemConfig::sharedArbitratorMemoryReclaimWaitTime() const {

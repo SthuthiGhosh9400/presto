@@ -65,6 +65,9 @@ public class TestHiveSplitScheduling
                 assertTrue(numberOfSplitsWithDynamicSplitScheduling < numberOfSplitsWithoutDynamicSplitScheduling, "Expected less splits with dynamic split scheduling");
             });
         }
+        catch (Exception e) {
+            assertTrue(false, e.getMessage());
+        }
         finally {
             getQueryRunner().execute("DROP TABLE IF EXISTS test_orders");
         }

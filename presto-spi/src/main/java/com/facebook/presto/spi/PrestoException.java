@@ -20,14 +20,14 @@ public class PrestoException
 {
     private final ErrorCode errorCode;
 
-    public PrestoException(ErrorCodeSupplier errorCodeSupplier, String message)
+    public PrestoException(ErrorCodeSupplier errorCode, String message)
     {
-        this(errorCodeSupplier, message, null);
+        this(errorCode, message, null);
     }
 
-    public PrestoException(ErrorCodeSupplier errorCodeSupplier, Throwable throwable)
+    public PrestoException(ErrorCodeSupplier errorCode, Throwable throwable)
     {
-        this(errorCodeSupplier, null, throwable);
+        this(errorCode, null, throwable);
     }
 
     public PrestoException(ErrorCodeSupplier errorCodeSupplier, String message, Throwable cause)

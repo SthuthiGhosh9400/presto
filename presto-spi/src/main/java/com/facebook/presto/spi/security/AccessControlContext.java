@@ -14,7 +14,6 @@
 package com.facebook.presto.spi.security;
 
 import com.facebook.presto.common.RuntimeStats;
-import com.facebook.presto.common.resourceGroups.QueryType;
 import com.facebook.presto.spi.QueryId;
 import com.facebook.presto.spi.WarningCollector;
 
@@ -31,9 +30,8 @@ public class AccessControlContext
     private final Optional<String> source;
     private final WarningCollector warningCollector;
     private final RuntimeStats runtimeStats;
-    private final Optional<QueryType> queryType;
 
-    public AccessControlContext(QueryId queryId, Optional<String> clientInfo, Set<String> clientTags, Optional<String> source, WarningCollector warningCollector, RuntimeStats runtimeStats, Optional<QueryType> queryType)
+    public AccessControlContext(QueryId queryId, Optional<String> clientInfo, Set<String> clientTags, Optional<String> source, WarningCollector warningCollector, RuntimeStats runtimeStats)
     {
         this.queryId = requireNonNull(queryId, "queryId is null");
         this.clientInfo = requireNonNull(clientInfo, "clientInfo is null");
@@ -41,7 +39,6 @@ public class AccessControlContext
         this.source = requireNonNull(source, "source is null");
         this.warningCollector = requireNonNull(warningCollector, "warningCollector is null");
         this.runtimeStats = requireNonNull(runtimeStats, "runtimeStats is null");
-        this.queryType = requireNonNull(queryType, "queryType is null");
     }
 
     public QueryId getQueryId()
@@ -72,10 +69,5 @@ public class AccessControlContext
     public RuntimeStats getRuntimeStats()
     {
         return runtimeStats;
-    }
-
-    public Optional<QueryType> getQueryType()
-    {
-        return queryType;
     }
 }

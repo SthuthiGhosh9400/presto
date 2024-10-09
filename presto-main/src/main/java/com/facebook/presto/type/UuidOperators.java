@@ -199,7 +199,7 @@ public final class UuidOperators
             if (left.isNull(leftPosition)) {
                 return false;
             }
-            return !UUID.equalTo(left, leftPosition, right, rightPosition);
+            return left.compareTo(leftPosition, 0, UUID.getFixedSize(), right, rightPosition, 0, UUID.getFixedSize()) != 0;
         }
     }
 

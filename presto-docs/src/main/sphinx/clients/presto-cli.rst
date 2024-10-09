@@ -72,19 +72,16 @@ Run the CLI with the ``--help`` option to see the online help.
 
     ./presto --help
 
-NAME
-        presto - Presto interactive console
-
 SYNOPSIS
         presto [--access-token <access token>] [--catalog <catalog>]
                 [--client-info <client-info>]
                 [--client-request-timeout <client request timeout>]
                 [--client-tags <client tags>] [--debug] [--disable-compression]
-                [--disable-redirects] [--execute <execute>]
-                [--extra-credential <extra-credential>...] [(-f <file> | --file <file>)]
-                [(-h | --help)] [--http-proxy <http-proxy>] [--ignore-errors]
-                [--insecure] [--keystore-password <keystore password>]
-                [--keystore-path <keystore path>] [--keystore-type <keystore type>]
+                [--execute <execute>] [--extra-credential <extra-credential>...]
+                [(-f <file> | --file <file>)] [(-h | --help)]
+                [--http-proxy <http-proxy>] [--ignore-errors]
+                [--keystore-password <keystore password>]
+                [--keystore-path <keystore path>]
                 [--krb5-config-path <krb5 config path>]
                 [--krb5-credential-cache-path <krb5 credential cache path>]
                 [--krb5-disable-remote-service-hostname-canonicalization]
@@ -93,12 +90,10 @@ SYNOPSIS
                 [--krb5-remote-service-name <krb5 remote service name>]
                 [--log-levels-file <log levels file>] [--output-format <output-format>]
                 [--password] [--resource-estimate <resource-estimate>...]
-                [--runtime-stats] [--schema <schema>] [--server <server>]
-                [--session <session>...] [--socks-proxy <socks-proxy>]
-                [--source <source>] [--truststore-password <truststore password>]
-                [--truststore-path <truststore path>]
-                [--truststore-type <truststore type>] [--user <user>]
-                [--validate-nexturi-source] [--version]
+                [--schema <schema>] [--server <server>] [--session <session>...]
+                [--socks-proxy <socks-proxy>] [--source <source>]
+                [--truststore-password <truststore password>]
+                [--truststore-path <truststore path>] [--user <user>] [--version]
 
 OPTIONS
         --access-token <access token>
@@ -122,9 +117,6 @@ OPTIONS
         --disable-compression
             Disable compression of query results
 
-        --disable-redirects
-            Disable client following redirects from server
-
         --execute <execute>
             Execute specified statements and exit
 
@@ -145,18 +137,11 @@ OPTIONS
             Continue processing in batch mode when an error occurs (default is
             to exit immediately)
 
-        --insecure
-            Skip validation of HTTP server certificates (should only be used for
-            debugging)
-
         --keystore-password <keystore password>
             Keystore password
 
         --keystore-path <keystore path>
             Keystore path
-
-        --keystore-type <keystore type>
-            Keystore type
 
         --krb5-config-path <krb5 config path>
             Kerberos config file path (default: /etc/krb5.conf)
@@ -181,7 +166,7 @@ OPTIONS
             Configure log levels for debugging using this file
 
         --output-format <output-format>
-            Output format for batch mode [ALIGNED, VERTICAL, JSON, CSV, TSV,
+            Output format for batch mode [ALIGNED, VERTICAL, CSV, TSV,
             CSV_HEADER, TSV_HEADER, NULL] (default: CSV)
 
         --password
@@ -192,8 +177,7 @@ OPTIONS
             key=value)
 
         --runtime-stats
-            Enable runtime stats information. Flag must be used in conjunction
-            with the --debug flag
+            Enable runtime stats information. Flag must be used in conjunction with the --debug flag
 
         --schema <schema>
             Default schema
@@ -217,16 +201,8 @@ OPTIONS
         --truststore-path <truststore path>
             Truststore path
 
-        --truststore-type <truststore type>
-            Truststore type
-
         --user <user>
             Username
 
-        --validate-nexturi-source
-            Validate nextUri server host and port does not change during query
-            execution
-
         --version
             Display version information and exit
-

@@ -17,11 +17,7 @@ import com.facebook.presto.Session;
 import com.facebook.presto.execution.warnings.WarningCollectorFactory;
 import com.facebook.presto.spi.QueryId;
 
-import static com.facebook.presto.Session.SessionBuilder;
-
 public interface SessionSupplier
 {
     Session createSession(QueryId queryId, SessionContext context, WarningCollectorFactory warningCollectorFactory);
-
-    SessionBuilder createSessionBuilder(QueryId queryId, SessionContext context, WarningCollectorFactory warningCollectorFactory);
 }

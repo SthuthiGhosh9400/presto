@@ -76,16 +76,6 @@ public class QuerySessionSupplier
     @Override
     public Session createSession(QueryId queryId, SessionContext context, WarningCollectorFactory warningCollectorFactory)
     {
-        Session session = createSessionBuilder(queryId, context, warningCollectorFactory).build();
-        if (context.getTransactionId().isPresent()) {
-            session = session.beginTransactionId(context.getTransactionId().get(), transactionManager, accessControl);
-        }
-        return session;
-    }
-
-    @Override
-    public SessionBuilder createSessionBuilder(QueryId queryId, SessionContext context, WarningCollectorFactory warningCollectorFactory)
-    {
         SessionBuilder sessionBuilder = Session.builder(sessionPropertyManager)
                 .setQueryId(queryId)
                 .setIdentity(authenticateIdentity(queryId, context))
@@ -138,7 +128,11 @@ public class QuerySessionSupplier
         WarningCollector warningCollector = warningCollectorFactory.create(sessionBuilder.getSystemProperty(WARNING_HANDLING, WarningHandlingLevel.class));
         sessionBuilder.setWarningCollector(warningCollector);
 
-        return sessionBuilder;
+        Session session = sessionBuilder.build();
+        if (context.getTransactionId().isPresent()) {
+            session = session.beginTransactionId(context.getTransactionId().get(), transactionManager, accessControl);
+        }
+        return session;
     }
 
     private Identity authenticateIdentity(QueryId queryId, SessionContext context)

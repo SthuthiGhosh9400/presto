@@ -134,7 +134,6 @@ public class Console
                 Optional.ofNullable(clientOptions.truststorePassword),
                 Optional.ofNullable(clientOptions.trustStoreType),
                 Optional.ofNullable(clientOptions.accessToken),
-                clientOptions.insecure,
                 Optional.ofNullable(clientOptions.user),
                 clientOptions.password ? Optional.of(getPassword()) : Optional.empty(),
                 Optional.ofNullable(clientOptions.krb5Principal),

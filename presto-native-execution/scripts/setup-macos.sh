@@ -13,14 +13,7 @@
 
 set -eufx -o pipefail
 
-SCRIPTDIR=$(dirname "${BASH_SOURCE[0]}")
-PYTHON_VENV=${PYTHON_VENV:-"${SCRIPTDIR}/../.venv"}
-# Prestissimo fails to build DuckDB with error
-# "math cannot parse the expression" when this
-# script is invoked under the Presto git project.
-# Set DEPENDENCY_DIR to a directory outside of Presto
-# to build DuckDB.
-BUILD_DUCKDB="${BUILD_DUCKDB:-false}"
+# Run the velox setup script first.
 source "$(dirname "${BASH_SOURCE}")/../velox/scripts/setup-macos.sh"
 
 function install_proxygen {
@@ -48,6 +41,4 @@ else
   install_velox_deps
   install_presto_deps
   echo "All dependencies for Prestissimo installed!"
-  echo "To reuse the installed dependencies for subsequent builds, consider adding this to your ~/.zshrc"
-  echo "export INSTALL_PREFIX=$INSTALL_PREFIX"
 fi

@@ -14,7 +14,6 @@
 package com.facebook.presto.cli;
 
 import com.facebook.presto.client.ClientSession;
-import com.facebook.presto.client.OkHttpUtil;
 import com.facebook.presto.client.StatementClient;
 import com.google.common.net.HostAndPort;
 import okhttp3.OkHttpClient;
@@ -64,7 +63,6 @@ public class QueryRunner
             Optional<String> truststorePassword,
             Optional<String> trustStoreType,
             Optional<String> accessToken,
-            boolean insecureSsl,
             Optional<String> user,
             Optional<String> password,
             Optional<String> kerberosPrincipal,
@@ -79,12 +77,7 @@ public class QueryRunner
         this.debug = debug;
         this.runtime = runtime;
 
-        if (insecureSsl) {
-            this.sslSetup = OkHttpUtil::setupInsecureSsl;
-        }
-        else {
-            this.sslSetup = builder -> setupSsl(builder, keystorePath, keystorePassword, keyStoreType, truststorePath, truststorePassword, trustStoreType);
-        }
+        this.sslSetup = builder -> setupSsl(builder, keystorePath, keystorePassword, keyStoreType, truststorePath, truststorePassword, trustStoreType);
 
         OkHttpClient.Builder builder = new OkHttpClient.Builder();
 

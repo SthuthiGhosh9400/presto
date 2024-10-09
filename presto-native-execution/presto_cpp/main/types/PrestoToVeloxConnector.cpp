@@ -1109,15 +1109,13 @@ HivePrestoToVeloxConnector::toVeloxSplit(
   for (const auto& [key, value] : hiveSplit->storage.serdeParameters) {
     serdeParameters[key] = value;
   }
-  std::unordered_map<std::string, std::string> infoColumns = {
-      {"$path", hiveSplit->fileSplit.path},
-      {"$file_size", std::to_string(hiveSplit->fileSplit.fileSize)},
+  std::unordered_map<std::string, std::string> infoColumns;
+  infoColumns.reserve(2);
+  infoColumns.insert(
+      {"$file_size", std::to_string(hiveSplit->fileSplit.fileSize)});
+  infoColumns.insert(
       {"$file_modified_time",
-       std::to_string(hiveSplit->fileSplit.fileModifiedTime)},
-  };
-  if (hiveSplit->tableBucketNumber) {
-    infoColumns["$bucket"] = std::to_string(*hiveSplit->tableBucketNumber);
-  }
+       std::to_string(hiveSplit->fileSplit.fileModifiedTime)});
   auto veloxSplit =
       std::make_unique<velox::connector::hive::HiveConnectorSplit>(
           catalogId,

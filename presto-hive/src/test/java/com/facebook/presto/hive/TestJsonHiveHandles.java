@@ -98,7 +98,7 @@ public class TestJsonHiveHandles
         assertEquals(columnHandle.getTypeSignature(), DOUBLE.getTypeSignature());
         assertEquals(columnHandle.getHiveType(), HiveType.HIVE_FLOAT);
         assertEquals(columnHandle.getHiveColumnIndex(), -1);
-        assertTrue(columnHandle.isPartitionKey());
+        assertEquals(columnHandle.isPartitionKey(), true);
     }
 
     private void testJsonEquals(String json, Map<String, Object> expectedMap)
