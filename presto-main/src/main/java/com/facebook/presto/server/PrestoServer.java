@@ -31,6 +31,7 @@ import com.facebook.airlift.node.NodeModule;
 import com.facebook.airlift.tracetoken.TraceTokenModule;
 import com.facebook.drift.server.DriftServer;
 import com.facebook.drift.transport.netty.server.DriftNettyServerTransport;
+import com.facebook.presto.ClientRequestFilterManager;
 import com.facebook.presto.ClientRequestFilterModule;
 import com.facebook.presto.dispatcher.QueryPrerequisitesManager;
 import com.facebook.presto.dispatcher.QueryPrerequisitesManagerModule;
